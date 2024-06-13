@@ -6,16 +6,16 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const telegram = window.Telegram.WebApp;
-    telegram.ready();
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/auth/user');
+        setUser(response.data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
 
-    telegram.onEvent('auth', (data) => {
-      axios.post('http://localhost:3001/auth', data)
-        .then(response => setUser(response.data))
-        .catch(error => console.error(error));
-    });
-
-    telegram.showAuth();
+    fetchUserData();
   }, []);
 
   return (
